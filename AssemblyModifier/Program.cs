@@ -1,10 +1,13 @@
-﻿//using ClassLibrary3;
-using Mono.Cecil;
+﻿using Mono.Cecil;
 using Mono.Cecil.Cil;
 using System;
+using System.Collections.Generic;
+using System.Linq;
 using System.Reflection;
+using System.Text;
+using System.Threading.Tasks;
 
-namespace ConsoleApp1
+namespace AssemblyModifier
 {
     class Program
     {

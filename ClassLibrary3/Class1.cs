@@ -9,6 +9,12 @@ namespace ClassLibrary3
             Console.WriteLine("Writing on the console explicitly...");
         }
 
+        public void WriteSomething(string text)
+        {
+            Console.WriteLine("Writing text: " + text);
+        }
+
+
 
     }
 }

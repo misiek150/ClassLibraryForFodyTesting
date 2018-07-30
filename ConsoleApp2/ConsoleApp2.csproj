@@ -6,7 +6,9 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <PackageReference Include="Mono.Cecil" Version="0.10.0" />
+    <Reference Include="ClassLibrary3">
+      <HintPath>..\ClassLibrary3\bin\Debug\ClassLibrary3.dll</HintPath>
+    </Reference>
   </ItemGroup>
 
 </Project>
