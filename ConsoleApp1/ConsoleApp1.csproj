@@ -1,0 +1,14 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <OutputType>Exe</OutputType>
+    <TargetFramework>netcoreapp2.0</TargetFramework>
+  </PropertyGroup>
+
+  <ItemGroup>
+    <Reference Include="ClassLibrary3">
+      <HintPath>..\ClassLibrary3\bin\Debug\ClassLibrary3.dll</HintPath>
+    </Reference>
+  </ItemGroup>
+
+</Project>
