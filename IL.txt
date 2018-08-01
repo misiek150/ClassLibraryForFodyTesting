@@ -1,0 +1,89 @@
+.method public hidebysig specialname rtspecialname 
+	instance void .ctor () cil managed 
+{
+	// Method begins at RVA 0x20b4
+	// Code size 8 (0x8)
+	.maxstack 8
+
+	IL_0000: ldarg.0
+	IL_0001: call instance void [mscorlib]System.Object::.ctor()
+	IL_0006: nop
+	IL_0007: ret
+} // end of method Class1::.ctor
+
+
+.method public hidebysig specialname rtspecialname 
+	instance void .ctor () cil managed 
+{
+	// Method begins at RVA 0x2050
+	// Code size 25 (0x19)
+	.maxstack 8
+
+	// (no C# code)
+	IL_0000: ldarg.0
+	IL_0001: call instance void [mscorlib]System.Object::.ctor()
+	IL_0006: nop
+	IL_0007: nop
+	// logger = new Logger("F:\\ExampleLog.txt");
+	IL_0008: ldarg.0
+	IL_0009: ldstr "F:\\ExampleLog.txt"
+	IL_000e: newobj instance void [BasicLogger]BasicLogger.Logger::.ctor(string)
+	IL_0013: stfld class [BasicLogger]BasicLogger.Logger ClassLibrary3.Class1::logger
+	// (no C# code)
+	IL_0018: ret
+} // end of method Class1::.ctor
+
+
+
+
+.method public hidebysig 
+	instance void DoCalculations () cil managed 
+{
+	// Method begins at RVA 0x2082
+	// Code size 24 (0x18)
+	.maxstack 8
+
+	// (no C# code)
+	IL_0000: nop
+	// Console.WriteLine("Doing calculation for a few seconds...");
+	IL_0001: ldstr "Doing calculation for a few seconds..."
+	IL_0006: call void [mscorlib]System.Console::WriteLine(string)
+	// (no C# code)
+	IL_000b: nop
+	// Thread.Sleep(3000);
+	IL_000c: ldc.i4 3000
+	IL_0011: call void [mscorlib]System.Threading.Thread::Sleep(int32)
+	// (no C# code)
+	IL_0016: nop
+	IL_0017: ret
+} // end of method Class1::DoCalculations
+
+
+.method public hidebysig 
+	instance void DoCalculations () cil managed 
+{
+	// Method begins at RVA 0x209c
+	// Code size 41 (0x29)
+	.maxstack 8
+
+	// (no C# code)
+	IL_0000: nop
+	// logger.LogMessage("Launched DoCalculations");
+	IL_0001: ldarg.0
+	IL_0002: ldfld class [BasicLogger]BasicLogger.Logger ClassLibrary3.Class1::logger
+	IL_0007: ldstr "Launched DoCalculations"
+	IL_000c: callvirt instance void [BasicLogger]BasicLogger.Logger::LogMessage(string)
+	// (no C# code)
+	IL_0011: nop
+	// Console.WriteLine("Doing calculation for a few seconds...");
+	IL_0012: ldstr "Doing calculation for a few seconds..."
+	IL_0017: call void [mscorlib]System.Console::WriteLine(string)
+	// (no C# code)
+	IL_001c: nop
+	// Thread.Sleep(3000);
+	IL_001d: ldc.i4 3000
+	IL_0022: call void [mscorlib]System.Threading.Thread::Sleep(int32)
+	// (no C# code)
+	IL_0027: nop
+	IL_0028: ret
+} // end of method Class1::DoCalculations

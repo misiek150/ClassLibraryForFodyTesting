@@ -9,6 +9,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "ConsoleApp451", "ConsoleApp
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "AssemblyModifier", "AssemblyModifier\AssemblyModifier.csproj", "{FEC015E5-47E4-45C3-9983-A9BEEF26167A}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "BasicLogger", "BasicLogger\BasicLogger.csproj", "{232A290D-E330-4847-95BB-AE8DDD4D88B3}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -27,6 +29,10 @@ Global
 		{FEC015E5-47E4-45C3-9983-A9BEEF26167A}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{FEC015E5-47E4-45C3-9983-A9BEEF26167A}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{FEC015E5-47E4-45C3-9983-A9BEEF26167A}.Release|Any CPU.Build.0 = Release|Any CPU
+		{232A290D-E330-4847-95BB-AE8DDD4D88B3}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{232A290D-E330-4847-95BB-AE8DDD4D88B3}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{232A290D-E330-4847-95BB-AE8DDD4D88B3}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{232A290D-E330-4847-95BB-AE8DDD4D88B3}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

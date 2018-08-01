@@ -1,20 +1,33 @@
 ﻿using System;
+using System.Threading;
 
 namespace ClassLibrary3
 {
     public class Class1
     {
-        public void WriteSomething()
+        public void DoSomeJob()
         {
-            Console.WriteLine("Writing on the console explicitly...");
+            Console.WriteLine("Doing some job for a few seconds...");
+            Thread.Sleep(3000);
         }
 
-        public void WriteSomething(string text)
+        public void DoSomeOtherJob()
         {
-            Console.WriteLine("Writing text: " + text);
+            Console.WriteLine("Doing some other job for a few seconds...");
+            Thread.Sleep(3000);
         }
 
+        public void DoCalculations()
+        {
+            Console.WriteLine("Doing calculation for a few seconds...");
+            Thread.Sleep(3000);
+        }
 
+        public void DoFancyWork()
+        {
+            Console.WriteLine("Doing fancy work for a few seconds...");
+            Thread.Sleep(3000);
+        }
 
     }
 }

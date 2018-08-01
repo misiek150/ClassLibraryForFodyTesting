@@ -6,9 +6,11 @@ namespace ConsoleApp451
     {
         static void Main(string[] args)
         {
-            ClassLibrary3.Class1 class11 = new ClassLibrary3.Class1();
-            class11.WriteSomething();
-            class11.WriteSomething("Additional info here");
+            ClassLibrary3.Class1 class1 = new ClassLibrary3.Class1();
+            class1.DoCalculations();
+            class1.DoSomeJob();
+            class1.DoSomeOtherJob();
+            class1.DoFancyWork();
             Console.ReadLine();
         }
     }
