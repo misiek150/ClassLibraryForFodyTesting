@@ -5,6 +5,8 @@ namespace ClassLibrary3
 {
     public class Class1
     {
+        public string DummyProperty { get; private set; }
+
         public void DoSomeJob()
         {
             Console.WriteLine("Doing some job for a few seconds...");

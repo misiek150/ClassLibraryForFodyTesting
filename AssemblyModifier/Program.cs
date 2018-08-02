@@ -1,11 +1,8 @@
 ﻿using Mono.Cecil;
 using Mono.Cecil.Cil;
 using System;
-using System.Collections.Generic;
-using System.Linq;
+using System.IO;
 using System.Reflection;
-using System.Text;
-using System.Threading.Tasks;
 
 namespace AssemblyModifier
 {
@@ -14,12 +11,21 @@ namespace AssemblyModifier
         static void Main(string[] args)
         {
             Tools tools = new Tools();
-            string FileName = @"C:\Users\Rodzinka\source\repos\ClassLibraryForFodyTesting\ClassLibrary3\bin\Debug\ClassLibrary3.dll";
+            string path = @"C:\Users\Rodzinka\Documents\GitRepos\MonoCecilPlayground\ClassLibraryForFodyTesting\ConsoleApp451\bin\Debug";
+            var filesToModify = Directory.GetFiles(path, "*.dll", SearchOption.AllDirectories);
+            foreach (string file in filesToModify)
+            {
+                Console.WriteLine(file);
+                tools.PrintTypes(file);
+                Console.WriteLine("- - - - - - - - - - - - -");
+                tools.AddLogger(file, "F:\\LogFile.txt");
+                tools.PrintTypes(file);
+            }
             //tools.PrintTypes(FileName);
 
-            tools.ModifyAssembly(FileName);
+            //tools.ModifyAssembly(FileName);
 
-            //Console.ReadLine();
+            Console.ReadLine();
         }
     }
 
@@ -27,20 +33,29 @@ namespace AssemblyModifier
     {
         public void PrintTypes(string fileName)
         {
-            ModuleDefinition module = ModuleDefinition.ReadModule(fileName);
-            foreach (TypeDefinition type in module.Types)
+            using (ModuleDefinition module = ModuleDefinition.ReadModule(fileName, new ReaderParameters { ReadWrite = true }))
             {
-                if (!type.IsPublic)
-                    continue;
-
-                Console.WriteLine(type.FullName);
-
-                foreach (MethodDefinition method in type.Methods.ToArray())
+                foreach (TypeDefinition type in module.Types)
                 {
-                    Console.WriteLine(" ---> " + method.Name);
-                    foreach (ParameterDefinition param in method.Parameters)
+                    if (!type.IsPublic)
+                        continue;
+
+                    Console.WriteLine(type.FullName);
+
+                    Console.WriteLine("--- Methods ---");
+                    foreach (MethodDefinition method in type.Methods.ToArray())
                     {
-                        Console.WriteLine("    ---> " + param.Name + " " + param.ParameterType + (param.IsReturnValue ? "(return type)" : ""));
+                        Console.WriteLine(method.Name);
+                        foreach (ParameterDefinition param in method.Parameters)
+                        {
+                            Console.WriteLine("---> " + param.Name + " " + param.ParameterType + (param.IsReturnValue ? "(return type)" : ""));
+                        }
+                    }
+
+                    Console.WriteLine("--- Properties ---");
+                    foreach (PropertyDefinition property in type.Properties.ToArray())
+                    {
+                        Console.WriteLine(string.Format("{0} [{1}]", property.Name, property.PropertyType));
                     }
                 }
             }
@@ -79,5 +94,85 @@ namespace AssemblyModifier
             }
 
         }
+
+        public void AddLogger(string fileName, string logPath)
+        {
+            MethodInfo writeLineMethod = typeof(Console).GetMethod("WriteLine", new Type[] { typeof(string) });
+
+            // ReaderParameters { ReadWrite = true } is necessary to later write the file
+            using (ModuleDefinition module = ModuleDefinition.ReadModule(fileName, new ReaderParameters { ReadWrite = true }))
+            {
+                TypeReference loggerReference = module.ImportReference(typeof(BasicLogger.Logger));
+
+                // Modify the assembly
+                //TypeDefinition type = new TypeDefinition("NameSpace", "Name", Mono.Cecil.TypeAttributes.ExplicitLayout);
+                //type.Properties.Add(new PropertyDefinition("Name", Mono.Cecil.PropertyAttributes.None, ))
+                TypeDefinition[] types = module.Types.ToArray();
+
+                MethodReference methodReference = module.ImportReference(writeLineMethod);
+
+                foreach (var type in types)
+                {
+                    if (type.Name == "Class2")
+                    {
+                        continue;
+                    }
+                    type.Properties.Add(new PropertyDefinition("AddedLogger", Mono.Cecil.PropertyAttributes.None, loggerReference));
+                    var constructor = typeof(BasicLogger.Logger).GetConstructor(new Type[1] { typeof(string) });
+
+
+
+                    //foreach (MethodDefinition methodToChange in type.Methods)
+                    //{
+                    //    string sentence = String.Concat("Code added in ", methodToChange.Name);
+                    //    Mono.Cecil.Cil.ILProcessor ilProcessor = methodToChange.Body.GetILProcessor();
+
+                    //    Mono.Cecil.Cil.Instruction loadStringInstruction = ilProcessor.Create(OpCodes.Ldstr, sentence);
+                    //    Mono.Cecil.Cil.Instruction callInstruction = ilProcessor.Create(OpCodes.Call, methodReference);
+
+                    //    Mono.Cecil.Cil.Instruction methodFirstInstruction = methodToChange.Body.Instructions[0];
+
+                    //    ilProcessor.InsertBefore(methodFirstInstruction, loadStringInstruction);
+                    //    ilProcessor.InsertAfter(loadStringInstruction, callInstruction);
+                    //} 
+
+                    foreach (MethodDefinition methodToChange in type.Methods)
+                    {
+                        if (methodToChange.IsConstructor)
+                        {
+                            ILProcessor ilProcessor = methodToChange.Body.GetILProcessor();
+
+                            Instruction loadArgumentInstruction = ilProcessor.Create(OpCodes.Ldarg_0);
+                            Instruction loadStringInstruction = ilProcessor.Create(OpCodes.Ldstr, logPath);
+                            //Instruction createObjectInstruction = ilProcessor.Create(OpCodes.Newobj, loggerReference);
+                            Instruction createObjectInstruction = ilProcessor.Create(OpCodes.Call, constructor);
+                            
+                            int instructionCount = methodToChange.Body.Instructions.Count;
+                            var lastInstruction = methodToChange.Body.Instructions[instructionCount - 1];
+
+
+                            ilProcessor.InsertBefore(lastInstruction, loadArgumentInstruction);
+                            ilProcessor.InsertAfter(loadArgumentInstruction, loadStringInstruction);
+                            ilProcessor.InsertAfter(loadStringInstruction, createObjectInstruction);
+                        }
+                        //string sentence = String.Concat("Code added in ", methodToChange.Name);
+                        //Mono.Cecil.Cil.ILProcessor ilProcessor = methodToChange.Body.GetILProcessor();
+
+                        //Mono.Cecil.Cil.Instruction loadStringInstruction = ilProcessor.Create(OpCodes.Ldstr, sentence);
+                        //Mono.Cecil.Cil.Instruction callInstruction = ilProcessor.Create(OpCodes.Call, methodReference);
+
+                        //Mono.Cecil.Cil.Instruction methodFirstInstruction = methodToChange.Body.Instructions[0];
+
+                        //ilProcessor.InsertBefore(methodFirstInstruction, loadStringInstruction);
+                        //ilProcessor.InsertAfter(loadStringInstruction, callInstruction);
+                    }
+                }
+
+                module.Write(); // Write to the same file that was used to open the file
+            }
+
+        }
+
+
     }
 }

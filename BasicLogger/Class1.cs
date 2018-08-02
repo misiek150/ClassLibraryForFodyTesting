@@ -9,6 +9,7 @@ namespace BasicLogger
         public Logger(string logPath)
         {
             LogPath = logPath;
+            File.WriteAllText(LogPath, "Logger initialized!");
         }
 
         public void LogMessage(string message)
