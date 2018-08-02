@@ -47,5 +47,11 @@
     <Compile Include="Class2.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\BasicLogger\BasicLogger.csproj">
+      <Project>{232A290D-E330-4847-95BB-AE8DDD4D88B3}</Project>
+      <Name>BasicLogger</Name>
+    </ProjectReference>
+  </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

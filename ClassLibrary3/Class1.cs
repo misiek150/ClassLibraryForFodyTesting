@@ -1,11 +1,17 @@
-﻿using System;
+﻿using BasicLogger;
+using System;
 using System.Threading;
 
 namespace ClassLibrary3
 {
     public class Class1
     {
-        public string DummyProperty { get; private set; }
+        private Logger logger;
+
+        public Class1()
+        {
+            logger = new Logger("F:\\LogFile.txt");
+        }
 
         public void DoSomeJob()
         {
