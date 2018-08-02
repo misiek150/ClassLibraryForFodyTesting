@@ -1,17 +1,17 @@
-﻿using BasicLogger;
-using System;
+﻿using System;
 using System.Threading;
 
 namespace ClassLibrary3
 {
     public class Class1
     {
-        private Logger logger;
+        //private Logger logger;
+        private Int32 testint;
 
-        public Class1()
-        {
-            logger = new Logger("F:\\LogFile.txt");
-        }
+        //public Class1()
+        //{
+        //    logger = new Logger("F:\\LogFile.txt");
+        //}
 
         public void DoSomeJob()
         {

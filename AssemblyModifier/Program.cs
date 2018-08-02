@@ -119,7 +119,7 @@ namespace AssemblyModifier
                     }
 
                     //type.Fields.Add(new FieldDefinition("CecilLogger", Mono.Cecil.FieldAttributes.Private, loggerReference));
-                    type.Fields.Add(new FieldDefinition("CecilLogger", Mono.Cecil.FieldAttributes.Private, module.ImportReference(typeof(Int32))));
+                    type.Fields.Add(new FieldDefinition("addedField", Mono.Cecil.FieldAttributes.Private, module.ImportReference(typeof(Int32))));
 
                     //type.Properties.Add(new PropertyDefinition("AddedLogger", Mono.Cecil.PropertyAttributes.None, loggerReference));
                     ConstructorInfo loggerConstructor = typeof(BasicLogger.Logger).GetConstructor(new Type[1] { typeof(string) });
