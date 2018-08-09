@@ -1,4 +1,5 @@
-﻿using System.IO;
+﻿using System;
+using System.IO;
 
 namespace BasicLogger
 {
@@ -9,12 +10,13 @@ namespace BasicLogger
         public Logger(string logPath)
         {
             LogPath = logPath;
-            File.WriteAllText(LogPath, "Logger initialized!");
+            //File.WriteAllText(LogPath, "Logger initialized! " + DateTime.Now.ToShortTimeString());
+            Console.WriteLine(LogPath + "Logger initialized! DDD " + DateTime.Now.ToShortTimeString());
         }
 
         public void LogMessage(string message)
         {
-            File.WriteAllText(LogPath, message);
+            File.WriteAllText(LogPath, string.Format("{0} {1}", message, DateTime.Now.ToShortTimeString()));
         }
     }
 }

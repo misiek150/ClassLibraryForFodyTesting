@@ -1,4 +1,5 @@
-﻿using Mono.Cecil;
+﻿using BasicLogger;
+using Mono.Cecil;
 using Mono.Cecil.Cil;
 using System;
 using System.IO;
@@ -13,7 +14,8 @@ namespace AssemblyModifier
             Tools tools = new Tools();
             //string path = @"C:\Users\Rodzinka\Documents\GitRepos\MonoCecilPlayground\ClassLibraryForFodyTesting\ConsoleApp451\bin\Debug";
             string path = @"C:\Users\Rodzinka\Documents\GitRepos\MonoCecilPlayground\ClassLibraryForFodyTesting\ClassLibrary3\bin\Debug";
-            var filesToModify = Directory.GetFiles(path, "ClassLibrary3.dll", SearchOption.AllDirectories);
+            const string fileName = "ClassLibrary3.dll";
+            var filesToModify = Directory.GetFiles(path, fileName, SearchOption.AllDirectories);
             foreach (string file in filesToModify)
             {
                 Console.WriteLine(file);
@@ -26,7 +28,14 @@ namespace AssemblyModifier
 
             //tools.ModifyAssembly(FileName);
 
-            Console.ReadLine();
+            //string sourceFileName = Path.Combine(Environment.CurrentDirectory, "BasicLogger.dll");
+            //string destFileName = Path.Combine(@"C:\Users\Rodzinka\Documents\GitRepos\MonoCecilPlayground\ClassLibraryForFodyTesting\ConsoleApp451\bin\Debug", "BasicLogger.dll");
+            //Console.WriteLine(sourceFileName);
+            //Console.WriteLine(destFileName);
+
+            //File.Copy(sourceFileName, destFileName, true);
+
+            //Console.ReadLine();
         }
     }
 
@@ -103,15 +112,7 @@ namespace AssemblyModifier
             // ReaderParameters { ReadWrite = true } is necessary to later write the file
             using (ModuleDefinition module = ModuleDefinition.ReadModule(fileName, new ReaderParameters { ReadWrite = true }))
             {
-                //TypeReference loggerReference = module.ImportReference(typeof(BasicLogger.Logger));
-
-                // Modify the assembly
-                //TypeDefinition type = new TypeDefinition("NameSpace", "Name", Mono.Cecil.TypeAttributes.ExplicitLayout);
-                //type.Properties.Add(new PropertyDefinition("Name", Mono.Cecil.PropertyAttributes.None, ))
                 TypeDefinition[] types = module.Types.ToArray();
-
-                //MethodReference methodReference = module.ImportReference(writeLineMethod);
-
                 foreach (TypeDefinition type in types)
                 {
                     if (type.Name != "Class1")
@@ -119,22 +120,11 @@ namespace AssemblyModifier
                         continue;
                     }
 
-                    //type.Fields.Add(new FieldDefinition("CecilLogger", Mono.Cecil.FieldAttributes.Private, loggerReference));
-                    FieldDefinition item = new FieldDefinition("addedField", Mono.Cecil.FieldAttributes.Public, module.ImportReference(typeof(Int32))) { DeclaringType = type };
-                    foreach (var property in item.GetType().GetProperties())
-                    {
-                        string name = property.Name;
-                        object value = property.GetValue(item);
-                        Console.WriteLine(string.Format("{0} - {1}", name, value == null ? "NULL" : value.ToString()));
-                    }
-
+                    FieldDefinition item = new FieldDefinition("CecilLogger", Mono.Cecil.FieldAttributes.Private, module.ImportReference(typeof(Logger)));
                     type.Fields.Add(item);
 
-
-
-                    //type.Properties.Add(new PropertyDefinition("AddedLogger", Mono.Cecil.PropertyAttributes.None, loggerReference));
-                    //ConstructorInfo loggerConstructor = typeof(BasicLogger.Logger).GetConstructor(new Type[1] { typeof(string) });
-                    //MethodReference constructorReference = module.ImportReference(loggerConstructor);
+                    ConstructorInfo loggerConstructor = typeof(Logger).GetConstructor(new Type[1] { typeof(string) });
+                    MethodReference constructorReference = module.ImportReference(loggerConstructor);
 
 
                     //foreach (MethodDefinition methodToChange in type.Methods)
@@ -151,35 +141,36 @@ namespace AssemblyModifier
                     //    ilProcessor.InsertAfter(loadStringInstruction, callInstruction);
                     //} 
 
-                    //foreach (MethodDefinition methodToChange in type.Methods)
-                    //{
-                    //    if (methodToChange.IsConstructor)
-                    //    {
-                    //        //ILProcessor ilProcessor = methodToChange.Body.GetILProcessor();
+                    foreach (MethodDefinition methodToChange in type.Methods)
+                    {
+                        if (methodToChange.IsConstructor)
+                        {
+                            ILProcessor ilProcessor = methodToChange.Body.GetILProcessor();
 
-                    //        //Instruction loadArgumentInstruction = ilProcessor.Create(OpCodes.Ldarg_0);
-                    //        //Instruction loadStringInstruction = ilProcessor.Create(OpCodes.Ldstr, logPath);
-                    //        //Instruction createObjectInstruction = ilProcessor.Create(OpCodes.Call, constructorReference);
+                            Instruction loadArgumentInstruction = ilProcessor.Create(OpCodes.Ldarg_0);
+                            Instruction loadStringInstruction = ilProcessor.Create(OpCodes.Ldstr, logPath);
+                            Instruction createObjectInstruction = ilProcessor.Create(OpCodes.Call, constructorReference);
 
-                    //        //int instructionCount = methodToChange.Body.Instructions.Count;
-                    //        //var lastInstruction = methodToChange.Body.Instructions[instructionCount - 1];
+                            int instructionCount = methodToChange.Body.Instructions.Count;
+                            var lastInstruction = methodToChange.Body.Instructions[instructionCount - 1];
 
 
-                    //        //ilProcessor.InsertBefore(lastInstruction, loadArgumentInstruction);
-                    //        //ilProcessor.InsertAfter(loadArgumentInstruction, loadStringInstruction);
-                    //        //ilProcessor.InsertAfter(loadStringInstruction, createObjectInstruction);
-                    //    }
-                    //    //string sentence = String.Concat("Code added in ", methodToChange.Name);
-                    //    //Mono.Cecil.Cil.ILProcessor ilProcessor = methodToChange.Body.GetILProcessor();
+                            ilProcessor.InsertBefore(lastInstruction, loadArgumentInstruction);
+                            ilProcessor.InsertAfter(loadArgumentInstruction, loadStringInstruction);
+                            ilProcessor.InsertAfter(loadStringInstruction, createObjectInstruction);
+                        }
+                        //    //string sentence = String.Concat("Code added in ", methodToChange.Name);
+                        //    //Mono.Cecil.Cil.ILProcessor ilProcessor = methodToChange.Body.GetILProcessor();
 
-                    //    //Mono.Cecil.Cil.Instruction loadStringInstruction = ilProcessor.Create(OpCodes.Ldstr, sentence);
-                    //    //Mono.Cecil.Cil.Instruction callInstruction = ilProcessor.Create(OpCodes.Call, methodReference);
+                        //    //Mono.Cecil.Cil.Instruction loadStringInstruction = ilProcessor.Create(OpCodes.Ldstr, sentence);
+                        //    //Mono.Cecil.Cil.Instruction callInstruction = ilProcessor.Create(OpCodes.Call, methodReference);
 
-                    //    //Mono.Cecil.Cil.Instruction methodFirstInstruction = methodToChange.Body.Instructions[0];
+                        //    //Mono.Cecil.Cil.Instruction methodFirstInstruction = methodToChange.Body.Instructions[0];
 
-                    //    //ilProcessor.InsertBefore(methodFirstInstruction, loadStringInstruction);
-                    //    //ilProcessor.InsertAfter(loadStringInstruction, callInstruction);
-                    //}
+                        //    //ilProcessor.InsertBefore(methodFirstInstruction, loadStringInstruction);
+                        //    //ilProcessor.InsertAfter(loadStringInstruction, callInstruction);
+                        //}
+                    }
                 }
 
                 module.Write(); // Write to the same file that was used to open the file

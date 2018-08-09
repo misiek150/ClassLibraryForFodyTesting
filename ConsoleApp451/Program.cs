@@ -1,13 +1,11 @@
 ﻿using System;
-using System.Globalization;
 using System.Reflection;
-using System.Threading;
 
 namespace ConsoleApp451
 {
     class Program
     {
-        
+
 
         static void Main(string[] args)
         {
@@ -20,9 +18,12 @@ namespace ConsoleApp451
                 ////Assembly assembly = Assembly.LoadFrom(@"C:\Users\Rodzinka\Documents\GitRepos\MonoCecilPlayground\ClassLibraryForFodyTesting\ClassLibrary3\bin\Debug\ClassLibrary3.dll");
 
                 ClassLibrary3.Class1 class1 = new ClassLibrary3.Class1();
-                
-                
-                
+                foreach (var field in class1.GetType().GetFields(BindingFlags.Instance | BindingFlags.NonPublic))
+                {
+                    Console.WriteLine(string.Format("{0} {1}", field.Name, field.FieldType));
+                }
+
+
                 //class1.DoCalculations();
                 //class1.DoCalculations();
                 //class1.DoSomeJob();

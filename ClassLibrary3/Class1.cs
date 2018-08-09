@@ -6,7 +6,7 @@ namespace ClassLibrary3
     public class Class1
     {
         //private Logger logger;
-        public Int32 testint;
+        private Int32 testint;
 
         //public Class1()
         //{
