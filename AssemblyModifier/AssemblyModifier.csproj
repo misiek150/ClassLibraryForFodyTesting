@@ -69,4 +69,7 @@
     </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
+  <PropertyGroup>
+    <PostBuildEvent>copy "$(TargetDir)BasicLogger.dll" "C:\Users\Rodzinka\Documents\GitRepos\MonoCecilPlayground\ClassLibraryForFodyTesting\ConsoleApp451\bin\Debug\BasicLogger.dll" /Y</PostBuildEvent>
+  </PropertyGroup>
 </Project>

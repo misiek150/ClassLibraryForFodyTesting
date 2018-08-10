@@ -11,7 +11,7 @@ namespace BasicLogger
         {
             LogPath = logPath;
             //File.WriteAllText(LogPath, "Logger initialized! " + DateTime.Now.ToShortTimeString());
-            Console.WriteLine(LogPath + "Logger initialized! DDD " + DateTime.Now.ToShortTimeString());
+            Console.WriteLine(LogPath + "Logger initialized! DDDy " + DateTime.Now.ToShortTimeString());
         }
 
         public void LogMessage(string message)

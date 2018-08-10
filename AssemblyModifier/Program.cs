@@ -2,6 +2,7 @@
 using Mono.Cecil;
 using Mono.Cecil.Cil;
 using System;
+using System.Diagnostics;
 using System.IO;
 using System.Reflection;
 
@@ -12,30 +13,23 @@ namespace AssemblyModifier
         static void Main(string[] args)
         {
             Tools tools = new Tools();
-            //string path = @"C:\Users\Rodzinka\Documents\GitRepos\MonoCecilPlayground\ClassLibraryForFodyTesting\ConsoleApp451\bin\Debug";
-            string path = @"C:\Users\Rodzinka\Documents\GitRepos\MonoCecilPlayground\ClassLibraryForFodyTesting\ClassLibrary3\bin\Debug";
+            string path = @"C:\Users\Rodzinka\Documents\GitRepos\MonoCecilPlayground\ClassLibraryForFodyTesting\ConsoleApp451\bin\Debug";
             const string fileName = "ClassLibrary3.dll";
             var filesToModify = Directory.GetFiles(path, fileName, SearchOption.AllDirectories);
             foreach (string file in filesToModify)
             {
                 Console.WriteLine(file);
-                //tools.PrintTypes(file);
-                //Console.WriteLine("- - - - - - - - - - - - -");
                 tools.AddLogger(file, "F:\\LogFile.txt");
-                //tools.PrintTypes(file);
+
+                Process peVerifyProcess = new Process();
+                peVerifyProcess.StartInfo.FileName = @"C:\Program Files (x86)\Microsoft SDKs\Windows\v10.0A\bin\NETFX 4.6.1 Tools\PEVerify.exe";
+                peVerifyProcess.StartInfo.Arguments = file;
+                peVerifyProcess.StartInfo.RedirectStandardOutput = true;
+                peVerifyProcess.StartInfo.UseShellExecute = false;
+                peVerifyProcess.Start();
+                Console.WriteLine(peVerifyProcess.StandardOutput.ReadToEnd());
             }
-            //tools.PrintTypes(FileName);
-
-            //tools.ModifyAssembly(FileName);
-
-            //string sourceFileName = Path.Combine(Environment.CurrentDirectory, "BasicLogger.dll");
-            //string destFileName = Path.Combine(@"C:\Users\Rodzinka\Documents\GitRepos\MonoCecilPlayground\ClassLibraryForFodyTesting\ConsoleApp451\bin\Debug", "BasicLogger.dll");
-            //Console.WriteLine(sourceFileName);
-            //Console.WriteLine(destFileName);
-
-            //File.Copy(sourceFileName, destFileName, true);
-
-            //Console.ReadLine();
+            Console.ReadLine();
         }
     }
 
