@@ -101,9 +101,6 @@ namespace AssemblyModifier
 
         public void AddLogger(string fileName, string logPath)
         {
-            //MethodInfo writeLineMethod = typeof(Console).GetMethod("WriteLine", new Type[] { typeof(string) });
-
-            // ReaderParameters { ReadWrite = true } is necessary to later write the file
             using (ModuleDefinition module = ModuleDefinition.ReadModule(fileName, new ReaderParameters { ReadWrite = true }))
             {
                 TypeDefinition[] types = module.Types.ToArray();
@@ -120,53 +117,28 @@ namespace AssemblyModifier
                     ConstructorInfo loggerConstructor = typeof(Logger).GetConstructor(new Type[1] { typeof(string) });
                     MethodReference constructorReference = module.ImportReference(loggerConstructor);
 
-
-                    //foreach (MethodDefinition methodToChange in type.Methods)
-                    //{
-                    //    string sentence = String.Concat("Code added in ", methodToChange.Name);
-                    //    Mono.Cecil.Cil.ILProcessor ilProcessor = methodToChange.Body.GetILProcessor();
-
-                    //    Mono.Cecil.Cil.Instruction loadStringInstruction = ilProcessor.Create(OpCodes.Ldstr, sentence);
-                    //    Mono.Cecil.Cil.Instruction callInstruction = ilProcessor.Create(OpCodes.Call, methodReference);
-
-                    //    Mono.Cecil.Cil.Instruction methodFirstInstruction = methodToChange.Body.Instructions[0];
-
-                    //    ilProcessor.InsertBefore(methodFirstInstruction, loadStringInstruction);
-                    //    ilProcessor.InsertAfter(loadStringInstruction, callInstruction);
-                    //} 
-
                     foreach (MethodDefinition methodToChange in type.Methods)
                     {
                         if (methodToChange.IsConstructor)
                         {
                             ILProcessor ilProcessor = methodToChange.Body.GetILProcessor();
 
+                            Instruction nopInstruction = ilProcessor.Create(OpCodes.Nop);
                             Instruction loadArgumentInstruction = ilProcessor.Create(OpCodes.Ldarg_0);
                             Instruction loadStringInstruction = ilProcessor.Create(OpCodes.Ldstr, logPath);
-                            Instruction createObjectInstruction = ilProcessor.Create(OpCodes.Call, constructorReference);
+                            Instruction createObjectInstruction = ilProcessor.Create(OpCodes.Newobj, constructorReference);
 
                             int instructionCount = methodToChange.Body.Instructions.Count;
                             var lastInstruction = methodToChange.Body.Instructions[instructionCount - 1];
 
-
-                            ilProcessor.InsertBefore(lastInstruction, loadArgumentInstruction);
+                            ilProcessor.InsertBefore(lastInstruction, nopInstruction);
+                            ilProcessor.InsertAfter(nopInstruction, loadArgumentInstruction);
                             ilProcessor.InsertAfter(loadArgumentInstruction, loadStringInstruction);
                             ilProcessor.InsertAfter(loadStringInstruction, createObjectInstruction);
+                            ilProcessor.InsertAfter(createObjectInstruction, ilProcessor.Create(OpCodes.Stfld, item));
                         }
-                        //    //string sentence = String.Concat("Code added in ", methodToChange.Name);
-                        //    //Mono.Cecil.Cil.ILProcessor ilProcessor = methodToChange.Body.GetILProcessor();
-
-                        //    //Mono.Cecil.Cil.Instruction loadStringInstruction = ilProcessor.Create(OpCodes.Ldstr, sentence);
-                        //    //Mono.Cecil.Cil.Instruction callInstruction = ilProcessor.Create(OpCodes.Call, methodReference);
-
-                        //    //Mono.Cecil.Cil.Instruction methodFirstInstruction = methodToChange.Body.Instructions[0];
-
-                        //    //ilProcessor.InsertBefore(methodFirstInstruction, loadStringInstruction);
-                        //    //ilProcessor.InsertAfter(loadStringInstruction, callInstruction);
-                        //}
                     }
                 }
-
                 module.Write(); // Write to the same file that was used to open the file
             }
 

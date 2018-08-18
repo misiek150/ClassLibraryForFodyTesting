@@ -1,18 +1,10 @@
-﻿using BasicLogger;
-using System;
+﻿using System;
 using System.Threading;
 
 namespace ClassLibrary3
 {
     public class Class1
     {
-        private Logger logger;
-        private Int32 testint;
-
-        public Class1()
-        {
-        }
-
         public void DoSomeJob()
         {
             Console.WriteLine("Doing some job for a few seconds...");

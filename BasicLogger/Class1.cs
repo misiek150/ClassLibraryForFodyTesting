@@ -10,8 +10,8 @@ namespace BasicLogger
         public Logger(string logPath)
         {
             LogPath = logPath;
-            //File.WriteAllText(LogPath, "Logger initialized! " + DateTime.Now.ToShortTimeString());
-            Console.WriteLine(LogPath + "Logger initialized! DDDy " + DateTime.Now.ToShortTimeString());
+            File.WriteAllText(LogPath, "Logger initialized! " + DateTime.Now.ToShortTimeString());
+            //Console.WriteLine(LogPath + "Logger initialized! DDDy " + DateTime.Now.ToShortTimeString());
         }
 
         public void LogMessage(string message)
