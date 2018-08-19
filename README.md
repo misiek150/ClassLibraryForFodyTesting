@@ -14,3 +14,6 @@ https://en.wikipedia.org/wiki/List_of_CIL_instructions
 https://stackoverflow.com/questions/35617201/what-is-the-module-type
 
 http://mono-cecil.narkive.com/nAgeCaLE/how-to-ldfld
+
+https://docs.microsoft.com/pl-pl/dotnet/framework/tools/peverify-exe-peverify-tool
+
