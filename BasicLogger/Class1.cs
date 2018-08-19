@@ -10,13 +10,19 @@ namespace BasicLogger
         public Logger(string logPath)
         {
             LogPath = logPath;
-            File.WriteAllText(LogPath, "Logger initialized! " + DateTime.Now.ToShortTimeString());
-            //Console.WriteLine(LogPath + "Logger initialized! DDDy " + DateTime.Now.ToShortTimeString());
+            using (StreamWriter sw = File.AppendText(LogPath))
+            {
+                sw.WriteLine("Logger initialized! " + DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss"));
+            }
         }
 
         public void LogMessage(string message)
         {
-            File.WriteAllText(LogPath, string.Format("{0} {1}", message, DateTime.Now.ToShortTimeString()));
+
+            using (StreamWriter sw = File.AppendText(LogPath))
+            {
+                sw.WriteLine(string.Format("[{0}] {1}", DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss"), message));
+            }
         }
     }
 }

@@ -111,18 +111,21 @@ namespace AssemblyModifier
                         continue;
                     }
 
-                    FieldDefinition item = new FieldDefinition("CecilLogger", Mono.Cecil.FieldAttributes.Private, module.ImportReference(typeof(Logger)));
-                    type.Fields.Add(item);
+                    FieldDefinition loggerField = new FieldDefinition("CecilLogger", Mono.Cecil.FieldAttributes.Private, module.ImportReference(typeof(Logger)));
+                    type.Fields.Add(loggerField);
 
                     ConstructorInfo loggerConstructor = typeof(Logger).GetConstructor(new Type[1] { typeof(string) });
+                    MethodInfo loggerLogMethod = typeof(Logger).GetMethod("LogMessage", new Type[1] { typeof(string) });
+
                     MethodReference constructorReference = module.ImportReference(loggerConstructor);
+                    MethodReference calledMethodReference = module.ImportReference(loggerLogMethod);
 
                     foreach (MethodDefinition methodToChange in type.Methods)
                     {
+                        ILProcessor ilProcessor = methodToChange.Body.GetILProcessor();
+
                         if (methodToChange.IsConstructor)
                         {
-                            ILProcessor ilProcessor = methodToChange.Body.GetILProcessor();
-
                             Instruction nopInstruction = ilProcessor.Create(OpCodes.Nop);
                             Instruction loadArgumentInstruction = ilProcessor.Create(OpCodes.Ldarg_0);
                             Instruction loadStringInstruction = ilProcessor.Create(OpCodes.Ldstr, logPath);
@@ -135,7 +138,37 @@ namespace AssemblyModifier
                             ilProcessor.InsertAfter(nopInstruction, loadArgumentInstruction);
                             ilProcessor.InsertAfter(loadArgumentInstruction, loadStringInstruction);
                             ilProcessor.InsertAfter(loadStringInstruction, createObjectInstruction);
-                            ilProcessor.InsertAfter(createObjectInstruction, ilProcessor.Create(OpCodes.Stfld, item));
+                            ilProcessor.InsertAfter(createObjectInstruction, ilProcessor.Create(OpCodes.Stfld, loggerField));
+                        }
+                        else if (methodToChange.Name.Equals("DoSomeJob", StringComparison.InvariantCultureIgnoreCase) || methodToChange.Name.Equals("DoSomeOtherJob", StringComparison.InvariantCultureIgnoreCase))
+                        {
+
+                            Instruction loadArgumentInstruction = ilProcessor.Create(OpCodes.Ldarg_0);
+                            Instruction loadFieldInstruction = ilProcessor.Create(OpCodes.Ldfld, loggerField);
+                            Instruction loadStringInstruction = ilProcessor.Create(OpCodes.Ldstr, string.Format("{0} method launched", methodToChange.FullName));
+                            Instruction callMethodInstruction = ilProcessor.Create(OpCodes.Callvirt, calledMethodReference);
+                            Instruction nopInstruction = ilProcessor.Create(OpCodes.Nop);
+
+                            var firstInstruction = methodToChange.Body.Instructions[0];
+                            ilProcessor.InsertAfter(firstInstruction, loadArgumentInstruction);
+                            ilProcessor.InsertAfter(loadArgumentInstruction, loadFieldInstruction);
+                            ilProcessor.InsertAfter(loadFieldInstruction, loadStringInstruction);
+                            ilProcessor.InsertAfter(loadStringInstruction, callMethodInstruction);
+                            ilProcessor.InsertAfter(callMethodInstruction, nopInstruction);
+
+                            Instruction loadArgumentInstruction2 = ilProcessor.Create(OpCodes.Ldarg_0);
+                            Instruction loadFieldInstruction2 = ilProcessor.Create(OpCodes.Ldfld, loggerField);
+                            Instruction loadStringInstruction2 = ilProcessor.Create(OpCodes.Ldstr, string.Format("{0} method finished", methodToChange.FullName));
+                            Instruction callMethodInstruction2 = ilProcessor.Create(OpCodes.Callvirt, calledMethodReference);
+                            Instruction nopInstruction2 = ilProcessor.Create(OpCodes.Nop);
+
+                            int instructionCount = methodToChange.Body.Instructions.Count;
+                            var lastInstruction = methodToChange.Body.Instructions[instructionCount - 1];
+                            ilProcessor.InsertBefore(lastInstruction, loadArgumentInstruction2);
+                            ilProcessor.InsertAfter(loadArgumentInstruction2, loadFieldInstruction2);
+                            ilProcessor.InsertAfter(loadFieldInstruction2, loadStringInstruction2);
+                            ilProcessor.InsertAfter(loadStringInstruction2, callMethodInstruction2);
+                            ilProcessor.InsertAfter(callMethodInstruction2, nopInstruction2);
                         }
                     }
                 }

@@ -11,6 +11,12 @@ namespace ClassLibrary3
             Thread.Sleep(3000);
         }
 
+        public void DoSomeJob2()
+        {
+            Console.WriteLine("Doing some job for a few seconds...");
+            Thread.Sleep(3000);
+        }
+
         public void DoSomeOtherJob()
         {
             Console.WriteLine("Doing some other job for a few seconds...");
