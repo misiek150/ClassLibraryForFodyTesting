@@ -20,8 +20,12 @@ namespace ConsoleApp451
 
                 class1.DoCalculations();
                 class1.DoSomeJob();
-                class1.DoSomeOtherJob();
+                class1.DoSomeOtherJob(true);
+                class1.DoSomeOtherJob(false);
                 class1.DoFancyWork();
+                class1.AddIntegers(1, 3, true);
+                class1.AddIntegers(1, 3, false);
+                class1.AddIntegers(1, 3, null);
             }
             catch (Exception ex)
             {

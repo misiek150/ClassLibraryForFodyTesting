@@ -18,11 +18,12 @@ namespace BasicLogger
 
         public void LogMessage(string message)
         {
-
-            using (StreamWriter sw = File.AppendText(LogPath))
-            {
-                sw.WriteLine(string.Format("[{0}] {1}", DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss"), message));
-            }
+            string logMessage = string.Format("[{0}] {1}", DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss"), message);
+            //using (StreamWriter sw = File.AppendText(LogPath))
+            //{
+            //   sw.WriteLine(logMessage);
+            //}
+            Console.WriteLine(logMessage);
         }
     }
 }
