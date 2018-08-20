@@ -17,3 +17,5 @@ http://mono-cecil.narkive.com/nAgeCaLE/how-to-ldfld
 
 https://docs.microsoft.com/pl-pl/dotnet/framework/tools/peverify-exe-peverify-tool
 
+http://miteshsureja.blogspot.com/2012/04/how-to-build-solution-or-project-from.html
+
