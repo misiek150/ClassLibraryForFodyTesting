@@ -67,6 +67,10 @@
       <Project>{232a290d-e330-4847-95bb-ae8ddd4d88b3}</Project>
       <Name>BasicLogger</Name>
     </ProjectReference>
+    <ProjectReference Include="..\CommonComponents\CommonComponents.csproj">
+      <Project>{9e585404-63cb-47e8-9639-59a0c235afa4}</Project>
+      <Name>CommonComponents</Name>
+    </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <PropertyGroup>

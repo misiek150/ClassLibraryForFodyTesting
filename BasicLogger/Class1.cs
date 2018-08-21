@@ -1,5 +1,4 @@
 ﻿using System;
-using System.IO;
 
 namespace BasicLogger
 {
@@ -10,10 +9,10 @@ namespace BasicLogger
         public Logger(string logPath)
         {
             LogPath = logPath;
-            using (StreamWriter sw = File.AppendText(LogPath))
-            {
-                sw.WriteLine("Logger initialized! " + DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss"));
-            }
+            //using (StreamWriter sw = File.AppendText(LogPath))
+            //{
+            //    sw.WriteLine("Logger initialized! " + DateTime.Now.ToString("yyyy-MM-dd HH:mm:ss"));
+            //}
         }
 
         public void LogMessage(string message)
